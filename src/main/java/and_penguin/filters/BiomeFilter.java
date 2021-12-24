@@ -28,6 +28,8 @@ public class BiomeFilter {
     private static boolean hasBadlands;
     private static boolean hasGiantTree;
     private static boolean hasSnowy;
+    private static boolean hasMushroom;
+    private static boolean hasBamboo;
     public static List<BlockBox> mushroomCoords;
     public static List<BlockBox> bambooCoords;
     public static List<BlockBox> specialCoords;
@@ -37,6 +39,8 @@ public class BiomeFilter {
         hasSnowy = false;
         hasGiantTree = false;
         hasBadlands = false;
+        hasMushroom = false;
+        hasBamboo = false;
     }
 
     public boolean filterBiomeSeed() {
@@ -123,30 +127,50 @@ public class BiomeFilter {
 
     public boolean hasBiome(BiomeLayer layer, List<BlockBox> boxes, int increment, Biome[] biomes) {
         OverworldBiomeSource source = new OverworldBiomeSource(Main.VERSION, seed);
-        for (BlockBox box : boxes) {
-            for (int x = box.minX; x < box.maxX; x += increment) {
-                for (int z = box.minZ; z < box.maxZ; z+= increment) {
-                    Biome b = source.getBiome(x, 0, z);
-                    for (Biome biome : biomes) {
-                        if (b.equals(biome)) {
-                            System.out.println("Seed: " + seed + " Biome: " + b.getName() + " " + x + " " + z);
-                            if (layer == MUSHROOM || layer == BAMBOO_JUNGLE)
+            outer: for (BlockBox box : boxes) {
+                for (int x = box.minX; x < box.maxX; x += increment) {
+                    for (int z = box.minZ; z < box.maxZ; z += increment) {
+                        boolean newBiome = findNewBiome(source, layer, x, z, biomes);
+                        if (layer == MUSHROOM && newBiome)
+                            return true;
+                        else if (layer == BAMBOO_JUNGLE && newBiome)
+                            return true;
+                        else if (layer == SPECIAL && newBiome)
+                            if (hasBadlands && hasGiantTree && hasSnowy)
                                 return true;
-                            if (layer == SPECIAL) {
-                                if (!hasBadlands && (b.equals(Biomes.BADLANDS) || b.equals(Biomes.BADLANDS_PLATEAU) ||
-                                        b.equals(Biomes.WOODED_BADLANDS_PLATEAU))) {
-                                    hasBadlands = true;
-                                } else if (!hasGiantTree && (b.equals(Biomes.GIANT_TREE_TAIGA) || b.equals(Biomes.GIANT_TREE_TAIGA_HILLS))) {
-                                    hasGiantTree = true;
-                                } else if (!hasSnowy && (b.equals(Biomes.SNOWY_TUNDRA) || b.equals(Biomes.SNOWY_TAIGA) ||
-                                        b.equals(Biomes.SNOWY_TAIGA_HILLS))) {
-                                    hasSnowy = true;
-                                }
-                                if (hasBadlands && hasSnowy && hasGiantTree) {
-                                    return true;
-                                }
-                            }
-                        }
+                            else
+                                continue outer;
+                    }
+                }
+            }
+        return false;
+    }
+
+    public boolean findNewBiome(OverworldBiomeSource source, BiomeLayer layer, int x, int z, Biome[] biomes) {
+        Biome b = source.getBiome(x, 0, z);
+        for (Biome biome : biomes) {
+            if (b.equals(biome)) {
+                System.out.println("Seed: " + seed + " Biome: " + b.getName() + " " + x + " " + z);
+                if (layer == MUSHROOM) {
+                    hasMushroom = true;
+                    return true;
+                }
+                else if (layer == BAMBOO_JUNGLE) {
+                    hasBamboo = true;
+                    return true;
+                }
+                else {
+                    if (!hasBadlands && (b.equals(Biomes.BADLANDS) || b.equals(Biomes.BADLANDS_PLATEAU) ||
+                            b.equals(Biomes.WOODED_BADLANDS_PLATEAU))) {
+                        hasBadlands = true;
+                        return true;
+                    } else if (!hasGiantTree && (b.equals(Biomes.GIANT_TREE_TAIGA) || b.equals(Biomes.GIANT_TREE_TAIGA_HILLS))) {
+                        hasGiantTree = true;
+                        return true;
+                    } else if (!hasSnowy && (b.equals(Biomes.SNOWY_TUNDRA) || b.equals(Biomes.SNOWY_TAIGA) ||
+                            b.equals(Biomes.SNOWY_TAIGA_HILLS))) {
+                        hasSnowy = true;
+                        return true;
                     }
                 }
             }
