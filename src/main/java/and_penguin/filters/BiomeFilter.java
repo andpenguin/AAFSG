@@ -109,9 +109,9 @@ public class BiomeFilter {
         Biome[] jungleBiomes = new Biome[] {Biomes.BAMBOO_JUNGLE, Biomes.BAMBOO_JUNGLE_HILLS};
         Biome[] specialBiomes = new Biome[] {Biomes.BADLANDS, Biomes.BADLANDS_PLATEAU,
         Biomes.WOODED_BADLANDS_PLATEAU, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.SNOWY_TAIGA,
-        Biomes.SNOWY_TUNDRA, Biomes.SNOWY_TAIGA_HILLS};
+        Biomes.SNOWY_TUNDRA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_MOUNTAINS};
         return hasBiome(MUSHROOM, mushroomCoords, 256, mushroomBiomes) &&
-                hasBiome(BAMBOO_JUNGLE, bambooCoords, 50, jungleBiomes) &&
+                hasBiome(BAMBOO_JUNGLE, bambooCoords, 256, jungleBiomes) &&
                 hasBiome(SPECIAL, specialCoords, 100, specialBiomes);
     }
 
@@ -141,6 +141,7 @@ public class BiomeFilter {
         Biome b = source.getBiome(x, 0, z);
         for (Biome biome : biomes) {
             if (b.equals(biome)) {
+                System.out.println("Seed: " + seed + " Biome: " + b.getName() + " " + x + " " + z);
                 if (layer == MUSHROOM) {
                     return true;
                 }
@@ -156,7 +157,7 @@ public class BiomeFilter {
                         hasGiantTree = true;
                         return true;
                     } else if (!hasSnowy && (b.equals(Biomes.SNOWY_TUNDRA) || b.equals(Biomes.SNOWY_TAIGA) ||
-                            b.equals(Biomes.SNOWY_TAIGA_HILLS))) {
+                            b.equals(Biomes.SNOWY_TAIGA_HILLS) || b.equals(Biomes.SNOWY_MOUNTAINS))) {
                         hasSnowy = true;
                         return true;
                     }

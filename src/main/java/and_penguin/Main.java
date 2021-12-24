@@ -33,7 +33,6 @@ public class Main {
             seed = numRand.nextLong() % (1L << 48);
        }
         System.out.println(seeds);
-        System.out.println(seeds.size());
     }
 
     public static boolean filterStructureSeed(Long seed, ChunkRand rand) {
