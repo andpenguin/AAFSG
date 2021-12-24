@@ -28,8 +28,6 @@ public class BiomeFilter {
     private static boolean hasBadlands;
     private static boolean hasGiantTree;
     private static boolean hasSnowy;
-    private static boolean hasMushroom;
-    private static boolean hasBamboo;
     public static List<BlockBox> mushroomCoords;
     public static List<BlockBox> bambooCoords;
     public static List<BlockBox> specialCoords;
@@ -39,8 +37,6 @@ public class BiomeFilter {
         hasSnowy = false;
         hasGiantTree = false;
         hasBadlands = false;
-        hasMushroom = false;
-        hasBamboo = false;
     }
 
     public boolean filterBiomeSeed() {
@@ -75,13 +71,7 @@ public class BiomeFilter {
             for (int z = -3000 >> scale; z < 3000 >> scale; z++) {
                 long localSeed = getLocalSeed(layer, seed, x, z);
                 if (Math.floorMod(localSeed >> 24, nextInt) == 0) {
-                    if (layer == MUSHROOM || layer == BAMBOO_JUNGLE) {
-                        boxes.add(new BlockBox(x << scale, z << scale, (x + 1) >> scale, (z + 1) << scale));
-                        return boxes;
-                    }
-                    if (layer == SPECIAL) {
-                        boxes.add(new BlockBox(x << scale, z << scale, (x + 1) << scale, (z + 1) << scale));
-                    }
+                    boxes.add(new BlockBox(x << scale, z << scale, (x + 1) << scale, (z + 1) << scale));
                 }
             }
         }
@@ -120,8 +110,8 @@ public class BiomeFilter {
         Biome[] specialBiomes = new Biome[] {Biomes.BADLANDS, Biomes.BADLANDS_PLATEAU,
         Biomes.WOODED_BADLANDS_PLATEAU, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.SNOWY_TAIGA,
         Biomes.SNOWY_TUNDRA, Biomes.SNOWY_TAIGA_HILLS};
-        return hasBiome(MUSHROOM, mushroomCoords, 100, mushroomBiomes) &&
-                hasBiome(BAMBOO_JUNGLE, bambooCoords, 100, jungleBiomes) &&
+        return hasBiome(MUSHROOM, mushroomCoords, 256, mushroomBiomes) &&
+                hasBiome(BAMBOO_JUNGLE, bambooCoords, 50, jungleBiomes) &&
                 hasBiome(SPECIAL, specialCoords, 100, specialBiomes);
     }
 
@@ -135,11 +125,12 @@ public class BiomeFilter {
                             return true;
                         else if (layer == BAMBOO_JUNGLE && newBiome)
                             return true;
-                        else if (layer == SPECIAL && newBiome)
+                        else if (layer == SPECIAL && newBiome) {
                             if (hasBadlands && hasGiantTree && hasSnowy)
                                 return true;
                             else
                                 continue outer;
+                        }
                     }
                 }
             }
@@ -150,13 +141,10 @@ public class BiomeFilter {
         Biome b = source.getBiome(x, 0, z);
         for (Biome biome : biomes) {
             if (b.equals(biome)) {
-                System.out.println("Seed: " + seed + " Biome: " + b.getName() + " " + x + " " + z);
                 if (layer == MUSHROOM) {
-                    hasMushroom = true;
                     return true;
                 }
                 else if (layer == BAMBOO_JUNGLE) {
-                    hasBamboo = true;
                     return true;
                 }
                 else {
