@@ -3,7 +3,6 @@ package and_penguin.filters;
 import and_penguin.Main;
 import and_penguin.Storage;
 import kaptainwutax.featureutils.structure.DesertPyramid;
-import kaptainwutax.featureutils.structure.Monument;
 import kaptainwutax.featureutils.structure.PillagerOutpost;
 import kaptainwutax.featureutils.structure.RuinedPortal;
 import kaptainwutax.mcutils.rand.ChunkRand;
@@ -14,14 +13,14 @@ import kaptainwutax.mcutils.util.pos.CPos;
 
 public class OverworldFilter {
     public static final double MAX_DIST = 250.0D * 250.0D;
-    private static long seed;
-    private static ChunkRand rand;
+    private final long seed;
+    private final ChunkRand rand;
     public static RuinedPortal ruinedPortal = new RuinedPortal(Dimension.OVERWORLD, Main.VERSION);
     public static DesertPyramid pyramid = new DesertPyramid(Main.VERSION);
     public static PillagerOutpost outpost = new PillagerOutpost(Main.VERSION);
-    private static boolean hasPortal;
-    private static boolean hasTemple;
-    private static boolean hasOutpost;
+    private boolean hasPortal;
+    private boolean hasTemple;
+    private boolean hasOutpost;
 
     public OverworldFilter(long seed, ChunkRand rand) {
         this.seed = seed;

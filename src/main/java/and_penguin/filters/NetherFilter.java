@@ -6,17 +6,13 @@ import kaptainwutax.biomeutils.biome.Biomes;
 import kaptainwutax.biomeutils.source.NetherBiomeSource;
 import kaptainwutax.featureutils.structure.BastionRemnant;
 import kaptainwutax.featureutils.structure.Fortress;
-import kaptainwutax.featureutils.structure.Monument;
-import kaptainwutax.featureutils.structure.RuinedPortal;
-import kaptainwutax.featureutils.structure.generator.structure.RuinedPortalGenerator;
 import kaptainwutax.mcutils.rand.ChunkRand;
 import kaptainwutax.mcutils.util.math.DistanceMetric;
-import kaptainwutax.mcutils.util.pos.BPos;
 import kaptainwutax.mcutils.util.pos.CPos;
 
 public class NetherFilter {
-    private static long seed;
-    private static ChunkRand rand;
+    private final long seed;
+    private final ChunkRand rand;
     public static final double MAX_DIST = 10.0D * 10.0D;
     public static Fortress fortress = new Fortress(Main.VERSION);
     public static BastionRemnant bastion = new BastionRemnant(Main.VERSION);
@@ -57,8 +53,6 @@ public class NetherFilter {
         if (!NetherFilter.fortress.canSpawn(Storage.fortCoords.getX(),
                 Storage.fortCoords.getZ(), nether))
             return false;
-        if (NetherFilter.bastion.getBiome() != Biomes.BASALT_DELTAS)
-            return true;
-        return false;
+        return NetherFilter.bastion.getBiome() != Biomes.BASALT_DELTAS;
     }
 }

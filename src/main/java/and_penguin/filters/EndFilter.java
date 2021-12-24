@@ -1,7 +1,6 @@
 package and_penguin.filters;
 
 import and_penguin.Main;
-import and_penguin.Storage;
 import kaptainwutax.biomeutils.source.BiomeSource;
 import kaptainwutax.featureutils.structure.EndCity;
 import kaptainwutax.featureutils.structure.generator.structure.EndCityGenerator;
@@ -11,7 +10,6 @@ import kaptainwutax.mcutils.util.math.DistanceMetric;
 import kaptainwutax.mcutils.util.pos.BPos;
 import kaptainwutax.mcutils.util.pos.CPos;
 import kaptainwutax.mcutils.util.pos.RPos;
-import kaptainwutax.mcutils.version.MCVersion;
 import kaptainwutax.terrainutils.TerrainGenerator;
 
 import java.util.ArrayList;
@@ -19,10 +17,10 @@ import java.util.Collections;
 import java.util.Random;
 
 public class EndFilter {
-    private static long seed;
-    private static ChunkRand rand;
+    private final long seed;
+    private final ChunkRand rand;
     private static final double MAX_DIST = 100.0D * 100.0D;
-    private static EndCity END_CITY = new EndCity(Main.VERSION);
+    private static final EndCity END_CITY = new EndCity(Main.VERSION);
 
     public EndFilter(long seed, ChunkRand rand) {
         this.seed = seed;
@@ -39,7 +37,7 @@ public class EndFilter {
         return new BPos(gateway_x, 0, gateway_z);
     }
 
-    public static boolean filterEnd() {
+    public boolean filterEnd() {
         BPos gatewayLocation = firstGateway(seed);
 
         RPos region = gatewayLocation.toRegionPos(20 << 4);
@@ -55,7 +53,6 @@ public class EndFilter {
         EndCityGenerator endCityGenerator = new EndCityGenerator(Main.VERSION);
         endCityGenerator.generate(generator, city, rand);
 
-        if (!endCityGenerator.hasShip()) return false;
-        return true;
+        return endCityGenerator.hasShip();
     }
 }

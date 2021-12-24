@@ -8,31 +8,20 @@ import kaptainwutax.biomeutils.layer.BiomeLayer;
 import kaptainwutax.biomeutils.layer.land.BambooJungleLayer;
 import kaptainwutax.biomeutils.layer.land.MushroomLayer;
 import kaptainwutax.biomeutils.layer.temperature.ClimateLayer;
-import kaptainwutax.biomeutils.source.BiomeSource;
-import kaptainwutax.biomeutils.source.NetherBiomeSource;
 import kaptainwutax.biomeutils.source.OverworldBiomeSource;
-import kaptainwutax.featureutils.structure.DesertPyramid;
-import kaptainwutax.featureutils.structure.Monument;
-import kaptainwutax.featureutils.structure.PillagerOutpost;
-import kaptainwutax.featureutils.structure.RuinedPortal;
-import kaptainwutax.featureutils.structure.generator.Generator;
 import kaptainwutax.featureutils.structure.generator.structure.RuinedPortalGenerator;
 import kaptainwutax.mcutils.block.Block;
 import kaptainwutax.mcutils.block.Blocks;
-import kaptainwutax.mcutils.rand.ChunkRand;
 import kaptainwutax.mcutils.state.Dimension;
 import kaptainwutax.mcutils.util.block.BlockBox;
 import kaptainwutax.mcutils.util.data.Pair;
 import kaptainwutax.mcutils.util.pos.BPos;
-import kaptainwutax.terrainutils.TerrainGenerator;
-import kaptainwutax.terrainutils.terrain.OverworldTerrainGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BiomeFilter {
-    private static long seed;
-    private static ChunkRand rand;
+    private final long seed;
     public final BiomeLayer MUSHROOM = getLayer(MushroomLayer.class);
     public final BiomeLayer BAMBOO_JUNGLE = getLayer(BambooJungleLayer.class);
     public final BiomeLayer SPECIAL = getLayer(ClimateLayer.Special.class);
@@ -43,9 +32,8 @@ public class BiomeFilter {
     public static List<BlockBox> bambooCoords;
     public static List<BlockBox> specialCoords;
 
-    public BiomeFilter(long seed, ChunkRand rand) {
+    public BiomeFilter(long seed) {
         this.seed = seed;
-        this.rand = rand;
         hasSnowy = false;
         hasGiantTree = false;
         hasBadlands = false;
@@ -61,8 +49,7 @@ public class BiomeFilter {
         bambooCoords = hasShortcut(BAMBOO_JUNGLE, 10, 8);
         if (bambooCoords == null) return false;
         specialCoords = hasShortcut(SPECIAL, 13, 10);
-        if (specialCoords.size() < 3) return false;
-        return true;
+        return specialCoords.size() >= 3;
     }
 
     public BiomeLayer getLayer(Class<? extends BiomeLayer> layerClass) {
@@ -112,15 +99,13 @@ public class BiomeFilter {
                     Storage.ruinedPortalCoords.getZ());
             List<Pair<Block, BPos>> portal = gen.getMinimalPortal();
             int obiCount = 0;
-            for (Pair pair : portal) {
+            for (Pair<Block, BPos> pair : portal) {
                 if (pair.getFirst() == Blocks.CRYING_OBSIDIAN)
                     return false;
                 else if (pair.getFirst() == Blocks.OBSIDIAN)
                     obiCount++;
             }
-            if (obiCount >= 7) {
-                return true;
-            }
+            return obiCount >= 7;
         }
         return false;
     }
