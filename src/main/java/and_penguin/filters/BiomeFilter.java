@@ -15,6 +15,7 @@ import kaptainwutax.mcutils.block.Blocks;
 import kaptainwutax.mcutils.state.Dimension;
 import kaptainwutax.mcutils.util.block.BlockBox;
 import kaptainwutax.mcutils.util.data.Pair;
+import kaptainwutax.mcutils.util.math.DistanceMetric;
 import kaptainwutax.mcutils.util.pos.BPos;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class BiomeFilter {
     public final BiomeLayer MUSHROOM = getLayer(MushroomLayer.class);
     public final BiomeLayer BAMBOO_JUNGLE = getLayer(BambooJungleLayer.class);
     public final BiomeLayer SPECIAL = getLayer(ClimateLayer.Special.class);
+    private static final double MAX_DIST = 300.0D * 300.0D;
     private static boolean hasBadlands;
     private static boolean hasGiantTree;
     private static boolean hasSnowy;
@@ -32,6 +34,10 @@ public class BiomeFilter {
     public static List<BlockBox> bambooCoords;
     public static List<BlockBox> specialCoords;
 
+    /**
+     * Creates a BiomeFilter object
+     * @param seed the world seed to filter
+     */
     public BiomeFilter(long seed) {
         this.seed = seed;
         hasSnowy = false;
@@ -39,10 +45,21 @@ public class BiomeFilter {
         hasBadlands = false;
     }
 
+    /**
+     * Returns wheter the seed has biome shortcuts, structures spawning,
+     * and the biomes at the end of world gen
+     * @return true if shortcuts, strucutres, and biomes are found, otherwise,
+     *         false
+     */
     public boolean filterBiomeSeed() {
         return hasShortcuts() && hasStructures() && hasBiomes();
     }
 
+    /**
+     * Returns if the world seed has the biome shortcuts for every biome
+     * @return true if all shortcuts are found, otherwise,
+     *         false
+     */
     public boolean hasShortcuts() {
         mushroomCoords = hasShortcut(MUSHROOM, 100, 8);
         if (mushroomCoords == null) return false;
@@ -52,6 +69,11 @@ public class BiomeFilter {
         return specialCoords.size() >= 3;
     }
 
+    /**
+     * Gets a biome layer to initialize the static biome layer variables
+     * @param layerClass the class (world generation stage) where the biomelayer is present
+     * @return the BiomeLayer that is found on that world gen stage
+     */
     public BiomeLayer getLayer(Class<? extends BiomeLayer> layerClass) {
         OverworldBiomeSource source = new OverworldBiomeSource(Main.VERSION, seed);
         for (int i = 0; i < source.getLayers().size(); i++) {
@@ -60,11 +82,27 @@ public class BiomeFilter {
         return source.voronoi;
     }
 
+    /**
+     * Gets the local seed for the given biome layer at that stage of generation
+     * @param biomeLayer The biome layer to find the local seed of
+     * @param seed the world seed
+     * @param posX the x coordinate to get the local seed of
+     * @param posZ the z coordinate to get the local seed of
+     * @return the local seed of the biomelayer at a given x and z
+     */
     public long getLocalSeed(BiomeLayer biomeLayer, long seed, int posX, int posZ) {
         long layerSeed = BiomeLayer.getLayerSeed(seed, biomeLayer.salt);
         return BiomeLayer.getLocalSeed(layerSeed, posX, posZ);
     }
 
+    /**
+     * Finds where if a BiomeLayer can be found in an early stage of world generation
+     * @param layer The biome layer to be found
+     * @param nextInt the rarity of the biome
+     * @param scale the scale of the biome size
+     * @return the list of regions where that biome is found
+     * (will only be one box if the layer is mushroom or bamboo)
+     */
     public List<BlockBox> hasShortcut(BiomeLayer layer, int nextInt, int scale) {
         List<BlockBox> boxes = new ArrayList<>();
         for (int x = -3000 >> scale; x < 3000 >> scale; x++) {
@@ -72,49 +110,78 @@ public class BiomeFilter {
                 long localSeed = getLocalSeed(layer, seed, x, z);
                 if (Math.floorMod(localSeed >> 24, nextInt) == 0) {
                     boxes.add(new BlockBox(x << scale, z << scale, (x + 1) << scale, (z + 1) << scale));
+                    if (layer == MUSHROOM || layer == BAMBOO_JUNGLE)
+                        return boxes;
                 }
             }
         }
         return boxes;
     }
 
+    /**
+     * Checks if the structures from the structureseed
+     * actually spawn on this worldseed
+     * @return true if all structures can spawn and the
+     *              ruined portal has at least 7 obsidian and no crying obsidian, otherwise,
+     *         false
+     */
     public boolean hasStructures() {
         OverworldBiomeSource source = new OverworldBiomeSource(Main.VERSION, seed);
-        if (!OverworldFilter.pyramid.canSpawn(Storage.templeCoords.getX(),
+        /*if (source.getSpawnPoint().distanceTo(Storage.ruinedPortalCoords, DistanceMetric.EUCLIDEAN_SQ) > MAX_DIST)
+            return false;*/ //looks if the spawnpoint is actually close to the ruined portal
+        if (!OverworldFilter.pyramid.canSpawn(Storage.templeCoords.getX(), // Pyramid check
                 Storage.templeCoords.getZ(), source))
             return false;
-        if (!OverworldFilter.outpost.canSpawn(Storage.outpostCoords.getX(),
+        if (!OverworldFilter.outpost.canSpawn(Storage.outpostCoords.getX(), // Outpost check
                 Storage.outpostCoords.getZ(), source))
             return false;
-        if (OverworldFilter.ruinedPortal.canSpawn(Storage.ruinedPortalCoords.getX(),
+        if (OverworldFilter.ruinedPortal.canSpawn(Storage.ruinedPortalCoords.getX(), // Ruined Portal Check
                 Storage.ruinedPortalCoords.getZ(), source)) {
             RuinedPortalGenerator gen = new RuinedPortalGenerator(Main.VERSION);
             gen.generate(seed, Dimension.OVERWORLD, Storage.ruinedPortalCoords.getX(),
                     Storage.ruinedPortalCoords.getZ());
-            List<Pair<Block, BPos>> portal = gen.getMinimalPortal();
+            List<Pair<Block, BPos>> portal = gen.getMinimalPortal(); // Get portal blocks
             int obiCount = 0;
             for (Pair<Block, BPos> pair : portal) {
-                if (pair.getFirst() == Blocks.CRYING_OBSIDIAN)
+                if (pair.getFirst() == Blocks.CRYING_OBSIDIAN) // no crying obi
                     return false;
                 else if (pair.getFirst() == Blocks.OBSIDIAN)
                     obiCount++;
             }
-            return obiCount >= 7;
+            return obiCount >= 7; // PL should give at least 3 obi in the ruined portal chest
         }
         return false;
     }
 
+    /**
+     * Filters the overworld of the worldseed, checking for a
+     * Mushroom Biomes, Giant Tree Biomes, Badlands Biomes, Bamboo Jungle, and Snowy Biome
+     * within a square with corners -3k,-3k 3k,3k
+     * @return true if all biomes are within the given range, otherwise,
+     *         false
+     */
     public boolean hasBiomes() {
         Biome[] mushroomBiomes = new Biome[] {Biomes.MUSHROOM_FIELDS, Biomes.MUSHROOM_FIELD_SHORE};
         Biome[] jungleBiomes = new Biome[] {Biomes.BAMBOO_JUNGLE, Biomes.BAMBOO_JUNGLE_HILLS};
         Biome[] specialBiomes = new Biome[] {Biomes.BADLANDS, Biomes.BADLANDS_PLATEAU,
         Biomes.WOODED_BADLANDS_PLATEAU, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.SNOWY_TAIGA,
         Biomes.SNOWY_TUNDRA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_MOUNTAINS};
-        return hasBiome(MUSHROOM, mushroomCoords, 256, mushroomBiomes) &&
-                hasBiome(BAMBOO_JUNGLE, bambooCoords, 256, jungleBiomes) &&
-                hasBiome(SPECIAL, specialCoords, 100, specialBiomes);
+        return hasBiome(MUSHROOM, mushroomCoords, 50, mushroomBiomes) &&
+                hasBiome(BAMBOO_JUNGLE, bambooCoords, 50, jungleBiomes) &&
+                hasBiome(SPECIAL, specialCoords, 50, specialBiomes);
     }
 
+    /**
+     * Finds if the world has a rare biome within given boxes from
+     * earlier stages of world generation
+     * @param layer The BiomeLayer that needs to be found
+     * @param boxes The spaces from earlier stages of world generation
+     *              that may contain the biome
+     * @param increment The spacing of how often to check for the biome
+     * @param biomes The valid matching biomes for the BiomeLayer
+     * @return true if the world contains the biome within any of the boxes, otherwise,
+     *         false
+     */
     public boolean hasBiome(BiomeLayer layer, List<BlockBox> boxes, int increment, Biome[] biomes) {
         OverworldBiomeSource source = new OverworldBiomeSource(Main.VERSION, seed);
             outer: for (BlockBox box : boxes) {
@@ -137,6 +204,16 @@ public class BiomeFilter {
         return false;
     }
 
+    /**
+     * Finds if a matching biome can be found at a given x and z location
+     * @param source the source of the Overworld of the worldseed
+     * @param layer the type of biome being searched for
+     * @param x the x coordinate to look for a biome at
+     * @param z the z coordinate to look for a biome at
+     * @param biomes the array of valid biomes to be looked for
+     * @return true if the biome matches one of the biomes in the array, otherwise,
+     *         false
+     */
     public boolean findNewBiome(OverworldBiomeSource source, BiomeLayer layer, int x, int z, Biome[] biomes) {
         Biome b = source.getBiome(x, 0, z);
         for (Biome biome : biomes) {

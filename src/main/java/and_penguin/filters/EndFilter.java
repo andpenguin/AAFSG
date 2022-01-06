@@ -22,11 +22,21 @@ public class EndFilter {
     private static final double MAX_DIST = 100.0D * 100.0D;
     private static final EndCity END_CITY = new EndCity(Main.VERSION);
 
+    /**
+     * Creates an EndFilter object with a given structureseed and random value
+     * @param seed a structureseed to be filtered
+     * @param rand a ChunkRand to check with
+     */
     public EndFilter(long seed, ChunkRand rand) {
         this.seed = seed;
         this.rand = rand;
     }
 
+    /**
+     * Finds the block position of the first gateway
+     * @param structureSeed the structure seed to be checked
+     * @return the Block position of the gateway
+     */
     public static BPos firstGateway(long structureSeed) {
         ArrayList<Integer> gateways = new ArrayList<>();
         for (int i = 0; i < 20; i++) gateways.add(i);
@@ -37,6 +47,12 @@ public class EndFilter {
         return new BPos(gateway_x, 0, gateway_z);
     }
 
+    /**
+     * Filters the overworld of the structureseed, checking for a
+     * Ship containing End City within MAX_DIST from the gateway
+     * @return true if all structures are within the given range, otherwise,
+     *         false
+     */
     public boolean filterEnd() {
         BPos gatewayLocation = firstGateway(seed);
 
