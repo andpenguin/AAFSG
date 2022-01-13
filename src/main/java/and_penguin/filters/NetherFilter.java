@@ -41,8 +41,8 @@ public class NetherFilter {
         CPos[] bastionLocs = new CPos[4];
         for (int x = -1; x < 1; x++) { // loop through quadrants looking for a structures
             for (int z = -1; z < 1; z++) {
-                fortLocs[2 + x + z] = fortress.getInRegion(seed, x, z, rand);
-                bastionLocs[2 + x + z] = bastion.getInRegion(seed, x, z, rand);
+                fortLocs[(x+1) + (z+1)*2] = fortress.getInRegion(seed, x, z, rand);
+                bastionLocs[(x+1) + (z+1)*2] = bastion.getInRegion(seed, x, z, rand);
             }
         }
         fastionLoop: for (CPos fortLoc: fortLocs) {
