@@ -12,6 +12,11 @@ import java.util.*;
 public class Main {
     public static final MCVersion VERSION = MCVersion.v1_16_1;
     private static final ArrayList<Long> seeds = new ArrayList<>();
+    public static int specialCount;
+    public static int templeCount;
+    public static int templeTotal;
+    public static int portalCount;
+    public static int portalTotal;
 
     public static void main(String[] args) {
         System.out.println("Generating a seed");
@@ -22,17 +27,35 @@ public class Main {
             if (filterStructureSeed(seed, rand)) { // Check if structureseed is valid
                 System.out.println("Structure seed found, getting biome match");
                 for (long biomeSeed = 0L; biomeSeed < 1L << 16; biomeSeed++) { // Check 2^16 biome seeds
+                    if ((biomeSeed > 1000 && specialCount == 0) ||
+                            (templeTotal > 100 && templeCount == 0) ||
+                            (portalTotal > 20 && portalCount == 0))
+                        break;
                     if (filterSeed(biomeSeed<<48|seed)) { // If the biome seed matches
                         long finalSeed = biomeSeed<<48|seed;
                         seeds.add(finalSeed);
                         System.out.println("Seed: " + finalSeed + " Time: " + new Date()); // Print out the seed and time
+                        getResults();
                         break; // stop checking 2^16 biome seeds
                     }
                 }
-           }
+                System.out.println(seed);
+                getResults();
+            }
             seed = numRand.nextLong() % (1L << 48);
        }
         System.out.println(seeds); // Print all matching seeds (useful when generating more than 1)
+    }
+
+    public static void getResults() {
+        System.out.println("Specials passed: " + specialCount + " out of 65536 \n" +
+                "Temples passed: " + templeCount + " out of " + templeTotal +
+                "\nPortals passed: " + portalCount  + " out of " + portalTotal);
+        specialCount = 0;
+        templeCount = 0;
+        templeTotal = 0;
+        portalCount = 0;
+        portalTotal = 0;
     }
 
     /**
@@ -43,9 +66,14 @@ public class Main {
      *         false
      */
     public static boolean filterStructureSeed(Long seed, ChunkRand rand) {
-        return  new OverworldFilter(seed, rand).filterOverworld() &&
-                new NetherFilter(seed, rand).filterNether() &&
-                new EndFilter(seed, rand).filterEnd();
+        EndFilter endFilter = new EndFilter(seed, rand);
+        NetherFilter netherFilter = new NetherFilter(seed, rand);
+        OverworldFilter overworldFilter = new OverworldFilter(seed, rand);
+        return  endFilter.filterEnd() && // end structures
+                netherFilter.filterNether() && // nether structures
+                overworldFilter.filterOverworld() && // overworld structures
+                endFilter.filterEndBiomes() && // end structures can spawn
+                netherFilter.filterNetherBiomes(); // nether structures can spawn
     }
 
     /**

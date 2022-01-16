@@ -26,13 +26,14 @@ public class BiomeFilter {
     public final BiomeLayer MUSHROOM = getLayer(MushroomLayer.class);
     public final BiomeLayer BAMBOO_JUNGLE = getLayer(BambooJungleLayer.class);
     public final BiomeLayer SPECIAL = getLayer(ClimateLayer.Special.class);
-    private static final double MAX_DIST = 300.0D * 300.0D;
+    private static final double MAX_DIST = 100.0D * 100.0D;
     private static boolean hasBadlands;
     private static boolean hasGiantTree;
     private static boolean hasSnowy;
     public static List<BlockBox> mushroomCoords;
     public static List<BlockBox> bambooCoords;
     public static List<BlockBox> specialCoords;
+
 
     /**
      * Creates a BiomeFilter object
@@ -52,7 +53,7 @@ public class BiomeFilter {
      *         false
      */
     public boolean filterBiomeSeed() {
-        return hasShortcuts() && hasStructures() && hasBiomes();
+            return hasShortcuts() && hasStructures() && hasBiomes();
     }
 
     /**
@@ -66,9 +67,12 @@ public class BiomeFilter {
         bambooCoords = hasShortcut(BAMBOO_JUNGLE, 10, 8);
         if (bambooCoords == null) return false;
         specialCoords = hasShortcut(SPECIAL, 13, 10);
-        return specialCoords.size() >= 3;
+        if (specialCoords.size() >= 3) {
+            Main.specialCount++;
+            return true;
+        }
+        return false;
     }
-
     /**
      * Gets a biome layer to initialize the static biome layer variables
      * @param layerClass the class (world generation stage) where the biomelayer is present
@@ -110,8 +114,8 @@ public class BiomeFilter {
                 long localSeed = getLocalSeed(layer, seed, x, z);
                 if (Math.floorMod(localSeed >> 24, nextInt) == 0) {
                     boxes.add(new BlockBox(x << scale, z << scale, (x + 1) << scale, (z + 1) << scale));
-                    if (layer == MUSHROOM || layer == BAMBOO_JUNGLE)
-                        return boxes;
+                    /*if (layer == MUSHROOM || layer == BAMBOO_JUNGLE)
+                        return boxes;*/
                 }
             }
         }
@@ -122,19 +126,23 @@ public class BiomeFilter {
      * Checks if the structures from the structureseed
      * actually spawn on this worldseed
      * @return true if all structures can spawn and the
-     *              ruined portal has at least 7 obsidian and no crying obsidian, otherwise,
+     *              ruined portal is not buried, has at least 7 obsidian
+     *              and no crying obsidian, otherwise,
      *         false
      */
     public boolean hasStructures() {
         OverworldBiomeSource source = new OverworldBiomeSource(Main.VERSION, seed);
         /*if (source.getSpawnPoint().distanceTo(Storage.ruinedPortalCoords, DistanceMetric.EUCLIDEAN_SQ) > MAX_DIST)
             return false;*/ //looks if the spawnpoint is actually close to the ruined portal
+        Main.templeTotal++;
         if (!OverworldFilter.pyramid.canSpawn(Storage.templeCoords.getX(), // Pyramid check
                 Storage.templeCoords.getZ(), source))
             return false;
+        Main.templeCount++;
         if (!OverworldFilter.outpost.canSpawn(Storage.outpostCoords.getX(), // Outpost check
                 Storage.outpostCoords.getZ(), source))
             return false;
+        Main.portalTotal++;
         if (OverworldFilter.ruinedPortal.canSpawn(Storage.ruinedPortalCoords.getX(), // Ruined Portal Check
                 Storage.ruinedPortalCoords.getZ(), source)) {
             RuinedPortalGenerator gen = new RuinedPortalGenerator(Main.VERSION);
@@ -148,7 +156,10 @@ public class BiomeFilter {
                 else if (pair.getFirst() == Blocks.OBSIDIAN)
                     obiCount++;
             }
-            return obiCount >= 7; // PL should give at least 3 obi in the ruined portal chest
+            if (obiCount >= 7) { // PL should give at least 3 obi in the ruined portal chest
+                Main.portalCount++;
+                return true;
+            }
         }
         return false;
     }
@@ -218,7 +229,6 @@ public class BiomeFilter {
         Biome b = source.getBiome(x, 0, z);
         for (Biome biome : biomes) {
             if (b.equals(biome)) {
-                System.out.println("Seed: " + seed + " Biome: " + b.getName() + " " + x + " " + z);
                 if (layer == MUSHROOM) {
                     return true;
                 }

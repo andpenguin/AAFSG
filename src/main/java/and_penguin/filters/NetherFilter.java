@@ -29,7 +29,7 @@ public class NetherFilter {
 
     /**
      * Filters the overworld of the structureseed, checking for a
-     * Non Basalt Bastion within MAX_DIST of a fortress
+     * Bastion within MAX_DIST of a fortress
      * and the Bastion is within MAX_DIST from 0,0
      * @return true if all structures are within the given range, otherwise,
      *         false
@@ -57,15 +57,15 @@ public class NetherFilter {
                 }
             }
         }
-        if (Storage.fortCoords == null || Storage.bastionCoords == null) // if fastion not found
-            return false;
-        NetherBiomeSource nether = new NetherBiomeSource(Main.VERSION, seed);
-        if (!NetherFilter.bastion.canSpawn(Storage.bastionCoords.getX(), // check if the bastion can spawn
-                Storage.bastionCoords.getZ(), nether))
-            return false;
-        if (!NetherFilter.fortress.canSpawn(Storage.fortCoords.getX(), // check if the fortress can spawn
-                Storage.fortCoords.getZ(), nether))
-            return false;
+        return Storage.fortCoords != null && Storage.bastionCoords != null; // if fastion not found
+    }
+
+    /**
+     * Checks if the bastion is in a Basalt Delta
+     * @return true if the bastion is not in a basalt delta, otherwise,
+     *         false
+     */
+    public boolean filterNetherBiomes() {
         return NetherFilter.bastion.getBiome() != Biomes.BASALT_DELTAS; // check if the bastion is in a basalt
     }
 }

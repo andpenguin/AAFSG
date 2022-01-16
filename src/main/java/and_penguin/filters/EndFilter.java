@@ -21,6 +21,7 @@ public class EndFilter {
     private final ChunkRand rand;
     private static final double MAX_DIST = 100.0D * 100.0D;
     private static final EndCity END_CITY = new EndCity(Main.VERSION);
+    private CPos city;
 
     /**
      * Creates an EndFilter object with a given structureseed and random value
@@ -30,6 +31,7 @@ public class EndFilter {
     public EndFilter(long seed, ChunkRand rand) {
         this.seed = seed;
         this.rand = rand;
+        city = null;
     }
 
     /**
@@ -49,7 +51,7 @@ public class EndFilter {
 
     /**
      * Filters the overworld of the structureseed, checking for a
-     * Ship containing End City within MAX_DIST from the gateway
+     * End City within MAX_DIST from the gateway
      * @return true if all structures are within the given range, otherwise,
      *         false
      */
@@ -57,9 +59,16 @@ public class EndFilter {
         BPos gatewayLocation = firstGateway(seed);
 
         RPos region = gatewayLocation.toRegionPos(20 << 4);
-        CPos city = END_CITY.getInRegion(seed, region.getX(), region.getZ(), rand);
-        if (city.toBlockPos().distanceTo(gatewayLocation, DistanceMetric.EUCLIDEAN_SQ) > MAX_DIST) return false;
+        city = END_CITY.getInRegion(seed, region.getX(), region.getZ(), rand);
+        return city.toBlockPos().distanceTo(gatewayLocation, DistanceMetric.EUCLIDEAN_SQ) > MAX_DIST;
+    }
 
+    /**
+     * Checks if the end city can spawn and if it contains a ship
+     * @return true if the end city can spawn and has a ship, otherwise,
+     *         false
+     */
+    public boolean filterEndBiomes() {
         BiomeSource biomeSource = BiomeSource.of(Dimension.END, Main.VERSION, seed);
         TerrainGenerator generator = TerrainGenerator.of(Dimension.END, biomeSource);
 
