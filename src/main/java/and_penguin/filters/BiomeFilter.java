@@ -114,8 +114,6 @@ public class BiomeFilter {
                 long localSeed = getLocalSeed(layer, seed, x, z);
                 if (Math.floorMod(localSeed >> 24, nextInt) == 0) {
                     boxes.add(new BlockBox(x << scale, z << scale, (x + 1) << scale, (z + 1) << scale));
-                    /*if (layer == MUSHROOM || layer == BAMBOO_JUNGLE)
-                        return boxes;*/
                 }
             }
         }
@@ -132,8 +130,6 @@ public class BiomeFilter {
      */
     public boolean hasStructures() {
         OverworldBiomeSource source = new OverworldBiomeSource(Main.VERSION, seed);
-        /*if (source.getSpawnPoint().distanceTo(Storage.ruinedPortalCoords, DistanceMetric.EUCLIDEAN_SQ) > MAX_DIST)
-            return false;*/ //looks if the spawnpoint is actually close to the ruined portal
         Main.templeTotal++;
         if (!OverworldFilter.pyramid.canSpawn(Storage.templeCoords.getX(), // Pyramid check
                 Storage.templeCoords.getZ(), source))
@@ -156,11 +152,15 @@ public class BiomeFilter {
                 else if (pair.getFirst() == Blocks.OBSIDIAN)
                     obiCount++;
             }
-            if (obiCount >= 7) { // PL should give at least 3 obi in the ruined portal chest
-                Main.portalCount++;
-                return true;
+            if (obiCount < 7) { // PL should give at least 3 obi in the ruined portal chest
+                return false;
             }
+            Main.portalCount++;
+            return true;
         }
+        /*if (source.getSpawnPoint().distanceTo(Storage.ruinedPortalCoords, DistanceMetric.EUCLIDEAN_SQ) > this.MAX_DIST) {
+            return false; //looks if the spawnpoint is actually close to the ruined portal
+        }*/
         return false;
     }
 

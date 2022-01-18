@@ -27,7 +27,7 @@ public class Main {
             if (filterStructureSeed(seed, rand)) { // Check if structureseed is valid
                 System.out.println("Structure seed found, getting biome match");
                 for (long biomeSeed = 0L; biomeSeed < 1L << 16; biomeSeed++) { // Check 2^16 biome seeds
-                    if ((biomeSeed > 1000 && specialCount == 0) ||
+                    if ((biomeSeed > 100 && specialCount == 0) ||
                             (templeTotal > 100 && templeCount == 0) ||
                             (portalTotal > 20 && portalCount == 0))
                         break;
