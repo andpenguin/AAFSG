@@ -1,7 +1,24 @@
 plugins {
     id 'groovy'
     id 'java'
+    id 'application'
 }
+
+application {
+    mainClass = 'and_penguin.Main'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "and_penguin.Main"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+
 
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -14,10 +31,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.codehaus.groovy:groovy-all:3.0.5'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.8'
     implementation 'com.github.KaptainWutax:SEED:master-SNAPSHOT'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
 test {
