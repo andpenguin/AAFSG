@@ -36,7 +36,7 @@ public class Main {
                     if (filterSeed(biomeSeed<<48|seed)) { // If the biome seed matches
                         finalSeed = biomeSeed<<48|seed;
                         try {
-                            FileWriter writer = new FileWriter("seed.json");
+                            FileWriter writer = new FileWriter("./src/main/java/and_penguin/seed.json");
                             writer.write(String.valueOf(finalSeed));
                             writer.close();
                         }

@@ -26,7 +26,7 @@ app.use(function(req, res, next) { // If any other page is accessed
 server.listen(port, () => { // Start listening for clients when the server is launched
     console.log("Server is running at Port: " + port) // log the server port
     try {
-        child.execSync('gradle run')
+        child.execSync('sudo gradle run')
     }
     catch {
         console.log("Child Process failed")
@@ -35,6 +35,7 @@ server.listen(port, () => { // Start listening for clients when the server is la
 
 io.on("connection", (socket) => { // When a client connects
     socket.on("generate", () => { // When the server is pinged to check the status of resetting
+        child.execSync("gradle run")
         fs.readFile("./src/main/java/and_penguin/seed.json", "utf8", (err, jsonString) => {
            if (err)
                 console.log(err)
