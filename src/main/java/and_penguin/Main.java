@@ -7,11 +7,13 @@ import and_penguin.filters.OverworldFilter;
 import kaptainwutax.mcutils.version.MCVersion;
 import kaptainwutax.mcutils.rand.ChunkRand;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
     public static final MCVersion VERSION = MCVersion.v1_16_1;
-    private static final ArrayList<Long> seeds = new ArrayList<>();
+    private static long finalSeed = 0;
     public static int specialCount;
     public static int templeCount;
     public static int templeTotal;
@@ -23,7 +25,7 @@ public class Main {
         ChunkRand rand = new ChunkRand(); // Random for seed checking
         Random numRand = new Random(); // Random for choosing a seed
         long seed = numRand.nextLong() % (1L << 48); // first seed
-        while (seeds.size() < 1) { // Until 1 seed is generated
+        while (finalSeed == 0) { // Until 1 seed is generated
             if (filterStructureSeed(seed, rand)) { // Check if structureseed is valid
                 System.out.println("Structure seed found, getting biome match");
                 for (long biomeSeed = 0L; biomeSeed < 1L << 16; biomeSeed++) { // Check 2^16 biome seeds
@@ -32,10 +34,14 @@ public class Main {
                             (portalTotal >= 20 && portalCount == 0))
                         break;
                     if (filterSeed(biomeSeed<<48|seed)) { // If the biome seed matches
-                        long finalSeed = biomeSeed<<48|seed;
-                        seeds.add(finalSeed);
+                        finalSeed = biomeSeed<<48|seed;
+                        try {
+                            FileWriter writer = new FileWriter("seed.json");
+                            writer.write(String.valueOf(finalSeed));
+                            writer.close();
+                        }
+                        catch (IOException e) { System.out.println(e); }
                         System.out.println("Seed: " + finalSeed + " Time: " + new Date()); // Print out the seed and time
-                        getResults();
                         break; // stop checking 2^16 biome seeds
                     }
                 }
@@ -44,7 +50,6 @@ public class Main {
             }
             seed = numRand.nextLong() % (1L << 48);
        }
-        System.out.println(seeds); // Print all matching seeds (useful when generating more than 1)
     }
 
     public static void getResults() {

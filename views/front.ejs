@@ -1,0 +1,72 @@
+<html>
+   <head>
+      <!--Page Header With Buttons and Titles-->
+      <title>AAFSG</title>
+      <button type="button" id="submit" onclick="generate()">Generate Seed</button>
+      <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/minecraftia" type="text/css"/>
+      <meta charset="utf-8">
+      <style>
+         h1 {
+            font-family: 'MinecraftiaRegular';
+            font-size: normal;
+            font-weight: normal;
+            font-style: normal;
+         }
+         h2 {
+            font-family: 'MinecraftiaRegular';
+            font-size: normal;
+            font-weight: normal;
+            font-style: normal;
+            color: grey;
+         }
+         td {
+            font-family: 'MinecraftiaRegular';
+            font-size: 12px;
+            font-weight: normal;
+            font-style: normal;
+            border-radius: 10px;
+            padding-left: 10px;
+         }
+         img {
+            padding-right: 10px;
+            padding-top: 5px;
+            width: 20px;
+         }
+         button {
+            font-family: 'MinecraftiaRegular';
+            size: large;
+            font-size: large;
+            font-weight: normal;
+            font-style: normal;
+            border-radius: 5px;
+            border: none;
+            color: black;
+         }
+         html {
+            background-color: rgb(212, 212, 212);
+         }
+         p {
+            font-family: 'MinecraftiaRegular';
+         }
+         input {
+            background-color: rgb(212, 212, 212);
+            font-family: 'MinecraftiaRegular';
+         }
+      </style>
+   </head>
+   <body>
+      <script src="https://cdn.socket.io/4.1.1/socket.io.min.js"></script>
+      <script>
+        var socket = io.connect(window.origin)
+        function generate() {
+            document.getElementById("seed").innerHTML = "Generating a seed..."
+            socket.emit("generate")
+            socket.on("seed", seed => {
+                document.getElementById("seed").innerHTML = "Seed: " + seed
+            });
+        }
+      </script>
+      <p id='seed'><large></large><p>
+      <p><small>Made by and_penguin - <a style="color: black;" href="https://github.com/andpenguin/AAFSG">Source Code</a></small></p>
+   </body>
+</html>
