@@ -61,10 +61,10 @@
         function generate() {
             document.getElementById("seed").innerHTML = "Generating a seed..."
             socket.emit("generate")
-            socket.on("seed", seed => {
-                document.getElementById("seed").innerHTML = "Seed: " + seed
-            });
         }
+        socket.on("seed", seed => {
+            document.getElementById("seed").innerHTML = "Seed: " + seed
+        });
       </script>
       <p id='seed'><large></large><p>
       <p><small>Made by and_penguin - <a style="color: black;" href="https://github.com/andpenguin/AAFSG">Source Code</a></small></p>
