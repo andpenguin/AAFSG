@@ -41,7 +41,7 @@ public class Main {
                             writer.write(String.valueOf(finalSeed));
                             writer.close();
                             FileWriter logger = new FileWriter("./js/logs.txt");
-                            logger.write(output);
+                            logger.append(output);
                             logger.close();
                         }
                         catch (IOException e) { System.out.println(e); }
