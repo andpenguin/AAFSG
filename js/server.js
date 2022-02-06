@@ -31,14 +31,27 @@ io.on("connection", (socket) => { // When a client connects
     socket.on("generate", () => { // When the server is pinged to check the status of resetting
         try {
             child.execSync('sudo gradle run', {stdio: 'inherit'})
+            sendSeed(socket);
         }
         catch {
             console.log("Child Process failed")
         }
-        fs.readFile("./src/main/java/and_penguin/seed.txt", "utf8", (err, seed) => {
-           if (err)
-                console.log(err)
-           socket.emit("seed", seed)
-        });
+
+    });
+    socket.on("refresh", () => {
+        try {
+            sendSeed(socket);
+        }
+        catch {
+            console.log("No seed yet")
+        }
     });
 });
+
+function sendSeed(socket) {
+    fs.readFile("./src/main/java/and_penguin/seed.txt", "utf8", (err, seed) => {
+       if (err)
+            console.log(err)
+       socket.emit("seed", seed)
+    });
+}

@@ -40,8 +40,8 @@ public class Main {
                             FileWriter writer = new FileWriter("./src/main/java/and_penguin/seed.txt");
                             writer.write(String.valueOf(finalSeed));
                             writer.close();
-                            FileWriter logger = new FileWriter("./js/logs.txt");
-                            logger.append(output);
+                            FileWriter logger = new FileWriter("./js/logs.txt", true);
+                            logger.write(output + "\n");
                             logger.close();
                         }
                         catch (IOException e) { System.out.println(e); }
