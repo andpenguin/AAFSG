@@ -35,13 +35,17 @@ public class Main {
                         break;
                     if (filterSeed(biomeSeed<<48|seed)) { // If the biome seed matches
                         finalSeed = biomeSeed<<48|seed;
+                        String output = "Seed: " + finalSeed + " Time: " + new Date();
                         try {
                             FileWriter writer = new FileWriter("./src/main/java/and_penguin/seed.json");
                             writer.write(String.valueOf(finalSeed));
                             writer.close();
+                            FileWriter logger = new FileWriter("./js/logs.txt");
+                            logger.write(output);
+                            logger.close();
                         }
                         catch (IOException e) { System.out.println(e); }
-                        System.out.println("Seed: " + finalSeed + " Time: " + new Date()); // Print out the seed and time
+                        System.out.println(output); // Print out the seed and time
                         break; // stop checking 2^16 biome seeds
                     }
                 }

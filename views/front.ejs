@@ -62,7 +62,8 @@
             document.getElementById("seed").innerHTML = "Generating a seed..."
             socket.emit("generate")
         }
-        socket.on("seed", seed => {
+        socket.on("seed", (seed) => {
+            alert("Seed recieved" + seed)
             document.getElementById("seed").innerHTML = "Seed: " + seed
         });
       </script>
