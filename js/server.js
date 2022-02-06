@@ -35,14 +35,10 @@ io.on("connection", (socket) => { // When a client connects
         catch {
             console.log("Child Process failed")
         }
-        fs.readFile("./src/main/java/and_penguin/seed.json", "utf8", (err, jsonString) => {
+        fs.readFile("./src/main/java/and_penguin/seed.txt", "utf8", (err, seed) => {
            if (err)
                 console.log(err)
-           try {
-                var doc = JSON.parse(jsonString)
-                socket.emit("seed", doc)
-           }
-           catch{}
+           socket.emit("seed", seed)
         });
     });
 });

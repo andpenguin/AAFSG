@@ -31,13 +31,13 @@ public class Main {
                 for (long biomeSeed = 0L; biomeSeed < 1L << 16; biomeSeed++) { // Check 2^16 biome seeds
                     if ((biomeSeed >= 1000 && specialCount == 0) ||
                             (templeTotal >= 100 && templeCount == 0) ||
-                            (portalTotal >= 20 && portalCount == 0))
+                            (portalTotal >= 50 && portalCount == 0))
                         break;
                     if (filterSeed(biomeSeed<<48|seed)) { // If the biome seed matches
                         finalSeed = biomeSeed<<48|seed;
                         String output = "Seed: " + finalSeed + " Time: " + new Date();
                         try {
-                            FileWriter writer = new FileWriter("./src/main/java/and_penguin/seed.json");
+                            FileWriter writer = new FileWriter("./src/main/java/and_penguin/seed.txt");
                             writer.write(String.valueOf(finalSeed));
                             writer.close();
                             FileWriter logger = new FileWriter("./js/logs.txt");
