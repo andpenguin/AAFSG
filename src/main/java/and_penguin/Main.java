@@ -25,7 +25,7 @@ public class Main {
         ChunkRand rand = new ChunkRand(); // Random for seed checking
         Random numRand = new Random(); // Random for choosing a seed
         long seed = numRand.nextLong() % (1L << 48); // first seed
-        while (finalSeed == 0) { // Until 1 seed is generated
+        while (true) { // Continously generate seeds
             if (filterStructureSeed(seed, rand)) { // Check if structureseed is valid
                 System.out.println("Structure seed found, getting biome match");
                 for (long biomeSeed = 0L; biomeSeed < 1L << 16; biomeSeed++) { // Check 2^16 biome seeds
@@ -37,8 +37,8 @@ public class Main {
                         finalSeed = biomeSeed<<48|seed;
                         String output = "Seed: " + finalSeed + " Time: " + new Date();
                         try {
-                            FileWriter writer = new FileWriter("./src/main/java/and_penguin/seed.txt");
-                            writer.write(String.valueOf(finalSeed));
+                            FileWriter writer = new FileWriter("./src/main/java/and_penguin/seeds.txt", true);
+                            writer.write(finalSeed + "\n");
                             writer.close();
                             FileWriter logger = new FileWriter("./js/logs.txt", true);
                             logger.write(output + "\n");

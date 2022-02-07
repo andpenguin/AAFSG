@@ -3,7 +3,6 @@
       <!--Page Header With Buttons and Titles-->
       <title>AAFSG</title>
       <button type="button" id="submit" onclick="generate()">Generate Seed</button>
-      <button type="button" onclick="refresh()">Manual Refresh</button>
       <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/minecraftia" type="text/css"/>
       <meta charset="utf-8">
       <style>
@@ -41,10 +40,13 @@
             font-style: normal;
             border-radius: 5px;
             border: none;
-            color: black;
+            color: green;
          }
          html {
             background-color: rgb(212, 212, 212);
+         }
+         body {
+            text-align: center;
          }
          p {
             font-family: 'MinecraftiaRegular';
@@ -53,6 +55,12 @@
             background-color: rgb(212, 212, 212);
             font-family: 'MinecraftiaRegular';
          }
+         div {
+            height: 50px;
+         }
+         .seed {
+            font-size: 25px;
+         }
       </style>
    </head>
    <body>
@@ -60,7 +68,6 @@
       <script>
         var socket = io.connect(window.origin)
         function generate() {
-            document.getElementById("seed").innerHTML = "Generating a seed..."
             socket.emit("generate")
         }
         function refresh() {
@@ -70,7 +77,21 @@
             document.getElementById("seed").innerHTML = "Seed: " + seed
         });
       </script>
-      <p id='seed'><large></large><p>
+      <p class='seed' id='seed'><large></large><p>
+      <p>Press the 'Generate Seed' button to begin generation.</p>
+      <div></div>
+      <h2>Welcome to AAFSG!</h2>
+      <p>This project generates filtered seeds to run All Advancements Speedruns on.
+      It can be used for non-Pogloot runs, but because it does not check for loot,
+      it is recommended to use Pogloot alongside of it.</p>
+      <h2>Filters Used</h2>
+      <p>This filters for: </p>
+      <p>Rare Biomes (Snowy, Giant Tree, Mushroom, Badlands, Bamboo Jungle) within a box wih corners -3k,-3k 3k,3k around spawn</p>
+      <p>A Completable ruined portal (7 obsidian + chest loot from Pogloot) and desert temple within 250 blocks from <strong>0,0</strong>  (not worldspawn)</p>
+      <p>A bastion and fortress within 10 chunks of 0,0</p>
+      <p>A very close end city from the first end gateway that contains a ship</p>
+      <p>A Pillager outpost within 500 blocks of spawn</p>
+      <div></div>
       <p><small>Made by and_penguin - <a style="color: black;" href="https://github.com/andpenguin/AAFSG">Source Code</a></small></p>
    </body>
 </html>
