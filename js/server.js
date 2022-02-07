@@ -27,7 +27,7 @@ app.use(function(req, res, next) { // If any other page is accessed
 server.listen(port, () => { // Start listening for clients when the server is launched
     console.log("Server is running at Port: " + port) // log the server port
     try {
-        child.exec('sudo gradle run')
+        child.execSync('sudo gradle run')
     }
     catch {
         console.log("Child process failed")
