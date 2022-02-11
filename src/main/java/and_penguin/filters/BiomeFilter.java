@@ -26,7 +26,6 @@ public class BiomeFilter {
     public final BiomeLayer MUSHROOM = getLayer(MushroomLayer.class);
     public final BiomeLayer BAMBOO_JUNGLE = getLayer(BambooJungleLayer.class);
     public final BiomeLayer SPECIAL = getLayer(ClimateLayer.Special.class);
-    private static final double MAX_DIST = 100.0D * 100.0D;
     private static boolean hasBadlands;
     private static boolean hasGiantTree;
     private static boolean hasSnowy;
@@ -158,9 +157,6 @@ public class BiomeFilter {
             Main.portalCount++;
             return true;
         }
-        /*if (source.getSpawnPoint().distanceTo(Storage.ruinedPortalCoords, DistanceMetric.EUCLIDEAN_SQ) > this.MAX_DIST) {
-            return false; //looks if the spawnpoint is actually close to the ruined portal
-        }*/
         return false;
     }
 

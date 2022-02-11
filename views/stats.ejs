@@ -1,0 +1,88 @@
+<html>
+   <head>
+      <!--Page Header With Buttons and Titles-->
+      <title>AAFSG</title>
+      <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/minecraftia" type="text/css"/>
+      <meta charset="utf-8">
+      <style>
+         h1 {
+            font-family: 'MinecraftiaRegular';
+            font-size: normal;
+            font-weight: normal;
+            font-style: normal;
+         }
+         h2 {
+            font-family: 'MinecraftiaRegular';
+            font-size: normal;
+            font-weight: normal;
+            font-style: normal;
+            color: grey;
+         }
+         td {
+            font-family: 'MinecraftiaRegular';
+            font-size: 12px;
+            font-weight: normal;
+            font-style: normal;
+            border-radius: 10px;
+            padding-left: 10px;
+         }
+         img {
+            padding-right: 10px;
+            padding-top: 5px;
+            width: 20px;
+         }
+         button {
+            font-family: 'MinecraftiaRegular';
+            size: large;
+            font-size: large;
+            font-weight: normal;
+            font-style: normal;
+            border-radius: 5px;
+            border: none;
+            color: green;
+         }
+         html {
+            background-color: rgb(212, 212, 212);
+         }
+         body {
+            text-align: center;
+         }
+         p {
+            font-family: 'MinecraftiaRegular';
+         }
+         input {
+            background-color: rgb(212, 212, 212);
+            font-family: 'MinecraftiaRegular';
+         }
+         div {
+            height: 50px;
+         }
+         .seed {
+            font-size: 25px;
+         }
+      </style>
+   </head>
+   <body>
+      <script src="https://cdn.socket.io/4.1.1/socket.io.min.js"></script>
+      <script>
+        var socket = io.connect(window.origin)
+        socket.emit("statRequest")
+        socket.on("stats", data => {
+            document.getElementById("total").innerHTML = "Total Seeds Generated: " + data[0]
+            document.getElementById("available").innerHTML = "Total Available Seeds: " + data[1]
+        });
+        function home() {
+            window.location.href = "http://" + document.domain
+        }
+      </script>
+      <h2>Stats</h2>
+      <p id='total'>Total Seeds Generated: </p>
+      <p id='available'>Total Available Seeds: </p>
+      <p id='seedCount'>Number of WorldSeeds per Viable Seed: ~500k</p>
+      <p>Lines of Code: ~950</p>
+      <p>Thanks to player who helped tested this out during the Open Beta - Especially T_Wagz!</p>
+      <button onclick="home()">Home</button>
+      <div></div>
+      <p><small>Made by and_penguin - <a style="color: black;" href="https://github.com/andpenguin/AAFSG">Source Code</a></small></p>
+   </body>
+</html>

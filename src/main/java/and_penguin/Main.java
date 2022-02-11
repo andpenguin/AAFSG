@@ -13,7 +13,6 @@ import java.util.*;
 
 public class Main {
     public static final MCVersion VERSION = MCVersion.v1_16_1;
-    private static long finalSeed = 0;
     public static int specialCount;
     public static int templeCount;
     public static int templeTotal;
@@ -34,15 +33,12 @@ public class Main {
                             (portalTotal >= 50 && portalCount == 0))
                         break;
                     if (filterSeed(biomeSeed<<48|seed)) { // If the biome seed matches
-                        finalSeed = biomeSeed<<48|seed;
+                        long finalSeed = biomeSeed<<48|seed;
                         String output = "Seed: " + finalSeed + " Time: " + new Date();
                         try {
                             FileWriter writer = new FileWriter("./src/main/java/and_penguin/seeds.txt", true);
                             writer.write(finalSeed + "\n");
                             writer.close();
-                            FileWriter logger = new FileWriter("./js/logs.txt", true);
-                            logger.write(output + "\n");
-                            logger.close();
                         }
                         catch (IOException e) { System.out.println(e); }
                         System.out.println(output); // Print out the seed and time
