@@ -37,12 +37,6 @@ public class OverworldFilter {
      *         false
      */
     public boolean filterOverworld() {
-        CPos ruinedPortalLoc = ruinedPortal.getInRegion(seed, 0, 0, rand); // get the ruined portal in the region
-        if (ruinedPortalLoc != null && ruinedPortalLoc.toBlockPos().distanceTo( // check the distance to 0,0
-                new BPos(0,0,0), DistanceMetric.EUCLIDEAN_SQ) <= MAX_DIST) {
-            Storage.ruinedPortalCoords = ruinedPortalLoc;
-        }
-        else return false;
         CPos templeLoc = pyramid.getInRegion(seed, 0, 0, rand); // get the temple in the region
         if (templeLoc != null && templeLoc.toBlockPos().distanceTo( // check the distance to 0,0
                 new BPos(0,0,0), DistanceMetric.EUCLIDEAN_SQ) <= MAX_DIST) {

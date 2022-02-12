@@ -134,30 +134,8 @@ public class BiomeFilter {
                 Storage.templeCoords.getZ(), source))
             return false;
         Main.templeCount++;
-        if (!OverworldFilter.outpost.canSpawn(Storage.outpostCoords.getX(), // Outpost check
-                Storage.outpostCoords.getZ(), source))
-            return false;
-        Main.portalTotal++;
-        if (OverworldFilter.ruinedPortal.canSpawn(Storage.ruinedPortalCoords.getX(), // Ruined Portal Check
-                Storage.ruinedPortalCoords.getZ(), source)) {
-            RuinedPortalGenerator gen = new RuinedPortalGenerator(Main.VERSION);
-            gen.generate(seed, Dimension.OVERWORLD, Storage.ruinedPortalCoords.getX(),
-                    Storage.ruinedPortalCoords.getZ());
-            List<Pair<Block, BPos>> portal = gen.getMinimalPortal(); // Get portal blocks
-            int obiCount = 0;
-            for (Pair<Block, BPos> pair : portal) {
-                if (pair.getFirst() == Blocks.CRYING_OBSIDIAN) // no crying obi
-                    return false;
-                else if (pair.getFirst() == Blocks.OBSIDIAN)
-                    obiCount++;
-            }
-            if (obiCount < 7) { // PL should give at least 3 obi in the ruined portal chest
-                return false;
-            }
-            Main.portalCount++;
-            return true;
-        }
-        return false;
+        return OverworldFilter.outpost.canSpawn(Storage.outpostCoords.getX(), // Outpost check
+                Storage.outpostCoords.getZ(), source);
     }
 
     /**
