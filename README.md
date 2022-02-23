@@ -25,4 +25,6 @@ Support me on Paypal to help support the project and myself! Link is [here](http
 Here is how I made it (seedfinding tutorial by me): https://youtu.be/CxJWSMeYE5U
 
 
-Big thanks to Denry, DylanDC14, and ExerSolver for helping with the project, and T_Wagz for playing it in Beta
+Big thanks to Denry, DylanDC14, and ExerSolver for helping with the project, and T_Wagz for playing it in Beta!
+
+Also, this project could not exist without the work of Neil and KaptainWutax in creating the seedfinding libraries.
