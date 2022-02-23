@@ -8,15 +8,9 @@ import kaptainwutax.biomeutils.layer.BiomeLayer;
 import kaptainwutax.biomeutils.layer.land.BambooJungleLayer;
 import kaptainwutax.biomeutils.layer.land.MushroomLayer;
 import kaptainwutax.biomeutils.layer.temperature.ClimateLayer;
+import kaptainwutax.biomeutils.source.NetherBiomeSource;
 import kaptainwutax.biomeutils.source.OverworldBiomeSource;
-import kaptainwutax.featureutils.structure.generator.structure.RuinedPortalGenerator;
-import kaptainwutax.mcutils.block.Block;
-import kaptainwutax.mcutils.block.Blocks;
-import kaptainwutax.mcutils.state.Dimension;
 import kaptainwutax.mcutils.util.block.BlockBox;
-import kaptainwutax.mcutils.util.data.Pair;
-import kaptainwutax.mcutils.util.math.DistanceMetric;
-import kaptainwutax.mcutils.util.pos.BPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,8 +128,10 @@ public class BiomeFilter {
                 Storage.templeCoords.getZ(), source))
             return false;
         Main.templeCount++;
-        return OverworldFilter.outpost.canSpawn(Storage.outpostCoords.getX(), // Outpost check
-                Storage.outpostCoords.getZ(), source);
+        if (!OverworldFilter.outpost.canSpawn(Storage.outpostCoords.getX(), // Outpost check
+                Storage.outpostCoords.getZ(), source))
+            return false;
+        return NetherFilter.bastion.canSpawn(Storage.bastionCoords, new NetherBiomeSource(Main.VERSION, seed));
     }
 
     /**

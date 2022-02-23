@@ -16,8 +16,6 @@ public class Main {
     public static int specialCount;
     public static int templeCount;
     public static int templeTotal;
-    public static int portalCount;
-    public static int portalTotal;
 
     public static void main(String[] args) {
         System.out.println("Generating a seed");

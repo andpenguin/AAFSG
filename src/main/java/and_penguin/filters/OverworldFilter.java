@@ -15,7 +15,6 @@ public class OverworldFilter {
     public static final double MAX_DIST = 250.0D * 250.0D;
     private final long seed;
     private final ChunkRand rand;
-    public static RuinedPortal ruinedPortal = new RuinedPortal(Dimension.OVERWORLD, Main.VERSION);
     public static DesertPyramid pyramid = new DesertPyramid(Main.VERSION);
     public static PillagerOutpost outpost = new PillagerOutpost(Main.VERSION);
 
