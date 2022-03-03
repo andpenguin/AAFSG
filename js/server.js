@@ -5,7 +5,8 @@ var app = express();
 var authorized = false
 var password
 var server = require("http").createServer(app)
-var position = -1;
+var position = -1
+var latestDate = new Date();
 const favicon = require('serve-favicon');
 var io = require('socket.io')(server, {
     cors: {
@@ -69,6 +70,11 @@ io.on("connection", (socket) => { // When a client connects
 });
 
 function sendSeed(socket) {
+    var seconds = (new Date().getTime() - latestDate.getTime()) / 1000
+    if (seconds < 5) {
+        socket.emit("seed", "Wait for the server rate limit of 5 seconds")
+        return
+    }
     fs.readFile("./src/main/java/and_penguin/seeds.txt", "utf8", (err, seeds) => {
        if (err)
             console.log(err)
@@ -86,6 +92,7 @@ function sendSeed(socket) {
                 console.log(err)
        });
        socket.emit("seed", seed)
+       latestDate = new Date()
     });
 }
 
