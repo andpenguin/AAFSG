@@ -4,6 +4,7 @@
       <title>AAFSG</title>
       <button type="button" id="submit" onclick="generate()">Generate Seed</button>
       <button onclick="stats()">Stats</button>
+      <h2 id="splash" class="splashtext"></h2>
       <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/minecraftia" type="text/css"/>
       <meta charset="utf-8">
       <style>
@@ -52,12 +53,25 @@
          .seed {
             font-size: 25px;
          }
+         .splashtext {
+            position: absolute;
+            left: 80%;
+            top: 10%;
+            font-size: 20px;
+            transform: rotate(30deg);
+            color: yellow;
+         }
       </style>
    </head>
    <body>
       <script src="https://cdn.socket.io/4.1.1/socket.io.min.js"></script>
       <script>
         var socket = io.connect(window.origin)
+        socket.emit("splashText")
+        socket.on("splash", text => {
+            document.getElementById("splash").innerHTML = text
+
+        });
         function generate() {
             socket.emit("generate")
         }
@@ -76,6 +90,7 @@
       </script>
       <p class='seed' id='seed'><large></large><p>
       <p>Press the 'Generate Seed' button to begin generation.</p>
+      <div></div>
       <h2>Welcome to AAFSG Open Beta!</h2>
       <p>This project generates filtered seeds to run All Advancements Speedruns on.
       It can be used for non-Pogloot runs, but because it does not check for loot,
