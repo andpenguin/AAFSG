@@ -12,7 +12,7 @@ A Pillager Outpost for How Did We Get Here within 500 blocks of 0,0
 
 # How to use the filter
 
-The filter is currently hosted here, where it pregenerates seeds for instant access: http://54.196.227.210/
+The filter is currently hosted here, where it pregenerates seeds for instant access: aafsg.com
 
 Public use and Speedrun.com category for pogloot and FSG boards coming soon!
 
@@ -26,5 +26,6 @@ Here is how I made it (seedfinding tutorial by me): https://youtu.be/CxJWSMeYE5U
 
 
 Big thanks to Denry, DylanDC14, and ExerSolver for helping with the project, and T_Wagz for playing it in Beta!
+Thanks to PodX12 for buying aafsg.com!
 
 Also, this project could not exist without the work of Neil and KaptainWutax in creating the seedfinding libraries.
