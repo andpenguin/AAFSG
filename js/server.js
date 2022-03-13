@@ -1,18 +1,16 @@
-const port = 3000 //Port for connecting to the website
-//Importing JS libraries
-const express = require('express');
-const https = require('https');
-const fs = require('fs');
+const port = 8443
+//Importing JS Libraries
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 
-var key = fs.readFileSync(__dirname + '/../certs/selfsigned.key');
-var cert = fs.readFileSync(__dirname + '/../certs/selfsigned.crt');
-var options = {
-  key: key,
-  cert: cert
-};
+var credentials = {key: privateKey, cert: certificate};
+var express = require('express');
+var app = express();
 
-app = express()
-var server = https.createServer(options, app);
+var server = https.createServer(credentials, app);
 
 const child = require("child_process");
 const favicon = require('serve-favicon');
