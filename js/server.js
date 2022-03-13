@@ -1,20 +1,31 @@
-const port = "80" //Port for connecting to the website
-//Importing JS libraries for file reading, server launching, and favicon
-var express = require('express');
-var app = express();
-var authorized = false
-var password
-var server = require("http").createServer(app)
-var position = -1
-var latestDate = new Date();
+const port = 3000 //Port for connecting to the website
+//Importing JS libraries
+const express = require('express');
+const https = require('https');
+const fs = require('fs');
+
+var key = fs.readFileSync(__dirname + '/../certs/selfsigned.key');
+var cert = fs.readFileSync(__dirname + '/../certs/selfsigned.crt');
+var options = {
+  key: key,
+  cert: cert
+};
+
+app = express()
+var server = https.createServer(options, app);
+
+const child = require("child_process");
 const favicon = require('serve-favicon');
 var io = require('socket.io')(server, {
     cors: {
         origin: "*"
     }
 });
-const fs = require("fs");
-const child = require("child_process");
+
+var authorized = false
+var password
+var position = -1
+var latestDate = new Date();
 
 app.set('view engine', 'ejs') // Initializes ejs library
 app.use(favicon('./views/favicon.ico')) // Displays favicon image file
@@ -63,7 +74,7 @@ io.on("connection", (socket) => { // When a client connects
     });
     socket.on("password", pass => {
         if (pass === password) {
-            authorized = true;
+            authorized = true
             socket.emit("passCorrect")
         }
     });

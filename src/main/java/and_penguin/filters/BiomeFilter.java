@@ -128,8 +128,8 @@ public class BiomeFilter {
                 Storage.templeCoords.getZ(), source))
             return false;
         Main.templeCount++;
-        if (!OverworldFilter.outpost.canSpawn(Storage.outpostCoords.getX(), // Outpost check
-                Storage.outpostCoords.getZ(), source))
+        if (!OverworldFilter.village.canSpawn(Storage.villageCoords.getX(), // Outpost check
+                Storage.villageCoords.getZ(), source))
             return false;
         return NetherFilter.bastion.canSpawn(Storage.bastionCoords, new NetherBiomeSource(Main.VERSION, seed));
     }
