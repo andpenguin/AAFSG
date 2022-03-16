@@ -42,7 +42,7 @@ public class OverworldFilter {
         else return false;
         for (int x = -1; x < 1; x++) { // loop through quadrants
             for (int z = -1; z < 1; z++) {
-                CPos villageLoc = village.getInRegion(seed, x, z, rand); // get the outpost in the region
+                CPos villageLoc = village.getInRegion(seed, x, z, rand); // get the village in the region
                 if (villageLoc != null && villageLoc.distanceTo( // check the distance to 0,0
                         new BPos(0,0,0), DistanceMetric.EUCLIDEAN_SQ) <= MAX_DIST) {
                     Storage.villageCoords = villageLoc;

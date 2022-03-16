@@ -59,13 +59,4 @@ public class NetherFilter {
         }
         return Storage.fortCoords != null && Storage.bastionCoords != null; // if fastion not found
     }
-
-    /**
-     * Checks if the bastion is in a Basalt Delta
-     * @return true if the bastion is not in a basalt delta, otherwise,
-     *         false
-     */
-    public boolean filterNetherBiomes() {
-        return NetherFilter.bastion.getBiome() != Biomes.BASALT_DELTAS; // check if the bastion is in a basalt
-    }
 }

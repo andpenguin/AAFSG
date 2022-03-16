@@ -116,9 +116,7 @@ public class BiomeFilter {
     /**
      * Checks if the structures from the structureseed
      * actually spawn on this worldseed
-     * @return true if all structures can spawn and the
-     *              ruined portal is not buried, has at least 7 obsidian
-     *              and no crying obsidian, otherwise,
+     * @return true if all structures can spawn, otherwise
      *         false
      */
     public boolean hasStructures() {
@@ -128,9 +126,12 @@ public class BiomeFilter {
                 Storage.templeCoords.getZ(), source))
             return false;
         Main.templeCount++;
-        if (!OverworldFilter.village.canSpawn(Storage.villageCoords.getX(), // Outpost check
-                Storage.villageCoords.getZ(), source))
+        Main.villageTotal++;
+        if (!OverworldFilter.village.canSpawn(Storage.villageCoords.getX(), // Village check
+                Storage.villageCoords.getZ(), source)) {
             return false;
+        }
+        Main.villageCount++;
         return NetherFilter.bastion.canSpawn(Storage.bastionCoords, new NetherBiomeSource(Main.VERSION, seed));
     }
 
