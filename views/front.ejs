@@ -76,7 +76,7 @@
             socket.emit("generate")
         }
         function stats() {
-            window.location.href = "http://" + document.domain + "/stats"
+            window.location.href = "https://" + document.domain + "/stats"
         }
         function passCheck() {
             socket.emit("password", document.getElementById("password").value)
@@ -85,7 +85,7 @@
             document.getElementById("seed").innerHTML = "Seed: " + seed
         });
         socket.on("passCorrect", () => {
-            window.location.href = "http://" + document.domain + "/verify"
+            window.location.href = "https://" + document.domain + "/verify"
         });
       </script>
       <p class='seed' id='seed'><large></large><p>
