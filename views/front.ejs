@@ -2,6 +2,7 @@
    <head>
       <!--Page Header With Buttons and Titles-->
       <title>AAFSG</title>
+      <button type="button" id="mode" onclick="darkMode()">Dark Mode</button>
       <button type="button" id="submit" onclick="generate()">Generate Seed</button>
       <button onclick="stats()">Stats</button>
       <h2 id="splash" class="splashtext"></h2>
@@ -31,11 +32,9 @@
             border: none;
             color: green;
          }
-         html {
-            background-color: rgb(212, 212, 212);
-         }
          body {
             text-align: center;
+            background-color: rgb(212, 212, 212);
          }
          p {
             font-family: 'MinecraftiaRegular';
@@ -44,7 +43,7 @@
             color: black;
          }
          input {
-            background-color: rgb(212, 212, 212);
+            background-color: #d4d4d4;
             font-family: 'MinecraftiaRegular';
          }
          div {
@@ -67,6 +66,7 @@
       <script src="https://cdn.socket.io/4.1.1/socket.io.min.js"></script>
       <script>
         var socket = io.connect(window.origin)
+        var mode = 'light'
         socket.emit("splashText")
         socket.on("splash", text => {
             document.getElementById("splash").innerHTML = text
@@ -81,6 +81,39 @@
         function passCheck() {
             socket.emit("password", document.getElementById("password").value)
         }
+        function darkMode() {
+            if (mode === 'dark') {
+                lightMode()
+                return
+            }
+            document.body.style.background = "#141414"
+            text = document.getElementsByTagName("p")
+            link = document.getElementsByTagName("a")
+            for (i = 0; i < text.length; i++) {
+                text[i].style["color"] = "#00c23a"
+                text[i].style["text-shadow"] = "1px 1px #FFFFFF"
+            }
+            for (i = 0; i < link.length; i++) {
+                link[i].style["color"] = "white"
+            }
+            document.getElementById("mode").innerHTML = "Light Mode"
+            mode = 'dark'
+        }
+        function lightMode() {
+            document.body.style.background = "#d4d4d4"
+            text = document.getElementsByTagName("p")
+            link = document.getElementsByTagName("a")
+            for (i = 0; i < text.length; i++) {
+                text[i].style["color"] = "black"
+                text[i].style["text-shadow"] = "0px 0px"
+            }
+            for (i = 0; i < link.length; i++) {
+                link[i].style["color"] = "black"
+            }
+            document.getElementById("mode").innerHTML = "Dark Mode"
+            mode = 'light'
+        }
+
         socket.on("seed", (seed) => {
             document.getElementById("seed").innerHTML = "Seed: " + seed
         });
