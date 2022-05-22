@@ -57,6 +57,8 @@ public class NetherFilter {
                 }
             }
         }
-        return Storage.fortCoords != null && Storage.bastionCoords != null; // if fastion not found
+        if (Storage.fortCoords == null || Storage.bastionCoords == null)
+            return false;
+        return NetherFilter.bastion.canSpawn(Storage.bastionCoords, new NetherBiomeSource(Main.VERSION, seed));
     }
 }

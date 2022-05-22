@@ -8,6 +8,9 @@ var password
 var server = require("http").createServer(app)
 var position = -1
 var latestDate = new Date();
+var dates = [];
+var count = [];
+var seedsSent = 0
 
 const child = require("child_process");
 const favicon = require('serve-favicon');
@@ -16,11 +19,6 @@ var io = require('socket.io')(server, {
         origin: "*"
     }
 });
-
-var authorized = false
-var password
-var position = -1
-var latestDate = new Date();
 
 app.set('view engine', 'ejs') // Initializes ejs library
 app.use(favicon('./views/favicon.ico')) // Displays favicon image file
@@ -84,7 +82,7 @@ function sendSeed(socket) {
         socket.emit("seed", "Wait for the server rate limit of 5 seconds")
         return
     }
-    fs.readFile("./src/main/java/and_penguin/seeds.txt", "utf8", (err, seeds) => {
+    fs.readFile("./js/seeds.txt", "utf8", (err, seeds) => {
        if (err)
             console.log(err)
        var newPos = seeds.indexOf('\n', position+1)
@@ -95,6 +93,8 @@ function sendSeed(socket) {
        var seed = seeds.substring(position+1, newPos)
        position = newPos
        var date = new Date().toUTCString()
+       dates.push(date)
+       seedsSent++
        var data = "Seed: " + seed + "  - Time Shown to user " + date + "\n"
        fs.appendFile("./js/logs.txt", data, (err) => {
             if (err)
@@ -103,20 +103,32 @@ function sendSeed(socket) {
        socket.emit("seed", seed)
        latestDate = new Date()
     });
+
+    fs.readFile("./js/seeds.txt", "utf8", (err, seeds) => {
+        var numSeeds = 0;
+        index = seeds.indexOf('\n');
+        while (index != -1) {
+             numSeeds++
+             index = seeds.indexOf('\n', index+1)
+        }
+        var seedCount = numSeeds - seedsSent
+        count.push(seedCount)
+    });
 }
 
 function sendStats(socket) {
-    var stats = [0,0]
-    fs.readFile("./src/main/java/and_penguin/seeds.txt", "utf8", (err, seeds) => {
+    var stats = [0, 0, [], []]
+    fs.readFile("./js/seeds.txt", "utf8", (err, seeds) => {
         if (err)
             console.log(err)
        index = seeds.indexOf('\n');
        while (index != -1) {
-            if (index > position)
-                stats[1]++
             stats[0]++
             index = seeds.indexOf('\n', index+1)
        }
+       stats[1] = stats[0] - seedsSent
+       stats[2] = dates
+       stats[3] = count
        socket.emit("stats", stats)
     });
 }

@@ -61,30 +61,40 @@
             font-size: 25px;
          }
       </style>
+      <script src="https://cdn.socket.io/4.1.1/socket.io.min.js"></script>
+      <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>
    </head>
    <body>
-      <script src="https://cdn.socket.io/4.1.1/socket.io.min.js"></script>
+      <h2>Stats</h2>
+      <p id='total'>Total Seeds Generated: </p>
+      <p id='available'>Total Available Seeds: </p>
+      <p id='seedCount'>Number of Worldseeds per Viable Seed: ~100 Million</p>
+      <p>Lines of Code: ~1200</p>
+      <p>Thanks to players who helped tested this out during the Open Beta - Especially T_Wagz!</p>
+      <p>Big thank you to PodX12 for buying the domain for the website!</p>
+      <div id="graph" style="margin:auto;width:780px;height:325px;"></div>
+      <div></div>
+      <button onclick="home()">Home</button>
+      <p><small>Made by and_penguin - <a style="color: black;" href="https://github.com/andpenguin/AAFSG">Source Code</a></small></p>
       <script>
         var socket = io.connect(window.origin)
         socket.emit("statRequest")
         socket.on("stats", data => {
             document.getElementById("total").innerHTML = "Total Seeds Generated: " + data[0]
             document.getElementById("available").innerHTML = "Total Available Seeds: " + data[1]
+            console.log(data)
+            PLOT = document.getElementById('graph');
+            Plotly.newPlot( PLOT, [{
+            x: data[2],
+            y: data[3] }], {
+            margin: { t: 50 },
+            paper_bgcolor: "rgb(212,212,212)",
+            plot_bgcolor: "rgb(212,212,212",
+            title: {text: "Available Seeds vs. Time", font: {color: "#26cf04", family: "MinecraftiaRegular" } } } );
         });
         function home() {
             window.location.href = "https://" + document.domain
         }
       </script>
-      <h2>Stats</h2>
-      <p id='total'>Total Seeds Generated: </p>
-      <p id='available'>Total Available Seeds: </p>
-      <p id='seedCount'>Number of Worldseeds per Viable Seed: ~500k</p>
-      <p>Lines of Code: ~900</p>
-      <p>Thanks to players who helped tested this out during the Open Beta - Especially T_Wagz!</p>
-      <p>Big thank you to PodX12 for buying the domain for the website!</p>
-      <p>Also shoutout to EightBit for manually generating 15k seeds!</p>
-      <button onclick="home()">Home</button>
-      <div></div>
-      <p><small>Made by and_penguin - <a style="color: black;" href="https://github.com/andpenguin/AAFSG">Source Code</a></small></p>
    </body>
 </html>

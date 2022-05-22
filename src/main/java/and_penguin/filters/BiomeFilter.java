@@ -10,10 +10,20 @@ import kaptainwutax.biomeutils.layer.land.MushroomLayer;
 import kaptainwutax.biomeutils.layer.temperature.ClimateLayer;
 import kaptainwutax.biomeutils.source.NetherBiomeSource;
 import kaptainwutax.biomeutils.source.OverworldBiomeSource;
+import kaptainwutax.featureutils.loot.ChestContent;
+import kaptainwutax.featureutils.loot.item.Item;
+import kaptainwutax.featureutils.loot.item.ItemStack;
+import kaptainwutax.featureutils.loot.item.Items;
+import kaptainwutax.featureutils.misc.SpawnPoint;
+import kaptainwutax.featureutils.structure.generator.structure.DesertPyramidGenerator;
+import kaptainwutax.mcutils.rand.ChunkRand;
 import kaptainwutax.mcutils.util.block.BlockBox;
+import kaptainwutax.mcutils.util.pos.BPos;
+import kaptainwutax.terrainutils.terrain.OverworldTerrainGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class BiomeFilter {
     private final long seed;
@@ -132,7 +142,7 @@ public class BiomeFilter {
             return false;
         }
         Main.villageCount++;
-        return NetherFilter.bastion.canSpawn(Storage.bastionCoords, new NetherBiomeSource(Main.VERSION, seed));
+        return true;
     }
 
     /**
@@ -144,12 +154,11 @@ public class BiomeFilter {
      */
     public boolean hasBiomes() {
         Biome[] mushroomBiomes = new Biome[] {Biomes.MUSHROOM_FIELDS, Biomes.MUSHROOM_FIELD_SHORE};
-        Biome[] jungleBiomes = new Biome[] {Biomes.BAMBOO_JUNGLE, Biomes.BAMBOO_JUNGLE_HILLS};
-        Biome[] specialBiomes = new Biome[] {Biomes.BADLANDS, Biomes.BADLANDS_PLATEAU,
-        Biomes.WOODED_BADLANDS_PLATEAU, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.SNOWY_TAIGA,
+        Biome[] jungleBiomes = new Biome[] {Biomes.BAMBOO_JUNGLE_HILLS};
+        Biome[] specialBiomes = new Biome[] {Biomes.BADLANDS_PLATEAU, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.SNOWY_TAIGA,
         Biomes.SNOWY_TUNDRA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_MOUNTAINS};
-        return hasBiome(MUSHROOM, mushroomCoords, 50, mushroomBiomes) &&
-                hasBiome(BAMBOO_JUNGLE, bambooCoords, 50, jungleBiomes) &&
+        return  hasBiome(MUSHROOM, mushroomCoords, 50, mushroomBiomes) &&
+                hasBiome(BAMBOO_JUNGLE, bambooCoords, 25, jungleBiomes) &&
                 hasBiome(SPECIAL, specialCoords, 50, specialBiomes);
     }
 
@@ -207,8 +216,7 @@ public class BiomeFilter {
                     return true;
                 }
                 else {
-                    if (!hasBadlands && (b.equals(Biomes.BADLANDS) || b.equals(Biomes.BADLANDS_PLATEAU) ||
-                            b.equals(Biomes.WOODED_BADLANDS_PLATEAU))) {
+                    if (!hasBadlands && (b.equals(Biomes.BADLANDS_PLATEAU))) {
                         hasBadlands = true;
                         return true;
                     } else if (!hasGiantTree && (b.equals(Biomes.GIANT_TREE_TAIGA) || b.equals(Biomes.GIANT_TREE_TAIGA_HILLS))) {

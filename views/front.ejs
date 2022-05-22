@@ -2,7 +2,7 @@
    <head>
       <!--Page Header With Buttons and Titles-->
       <title>AAFSG</title>
-      <button type="button" id="mode" onclick="darkMode()">Dark Mode</button>
+      <button type="button" id="mode" onclick="changeMode()">Dark Mode</button>
       <button type="button" id="submit" onclick="generate()">Generate Seed</button>
       <button onclick="stats()">Stats</button>
       <h2 id="splash" class="splashtext"></h2>
@@ -66,11 +66,11 @@
       <script src="https://cdn.socket.io/4.1.1/socket.io.min.js"></script>
       <script>
         var socket = io.connect(window.origin)
-        var mode = 'light'
+        var mode = decodeURIComponent(document.cookie)
         socket.emit("splashText")
         socket.on("splash", text => {
             document.getElementById("splash").innerHTML = text
-
+            setMode()
         });
         function generate() {
             socket.emit("generate")
@@ -81,56 +81,61 @@
         function passCheck() {
             socket.emit("password", document.getElementById("password").value)
         }
-        function darkMode() {
+        function setMode() {
             if (mode === 'dark') {
-                lightMode()
-                return
+                document.body.style.background = "#141414"
+                text = document.getElementsByTagName("p")
+                link = document.getElementsByTagName("a")
+                for (i = 0; i < text.length; i++) {
+                    text[i].style["color"] = "#00c23a"
+                    text[i].style["text-shadow"] = "1px 1px #FFFFFF"
+                }
+                for (i = 0; i < link.length; i++) {
+                    link[i].style["color"] = "white"
+                }
+                document.getElementById("mode").innerHTML = "Light Mode"
             }
-            document.body.style.background = "#141414"
-            text = document.getElementsByTagName("p")
-            link = document.getElementsByTagName("a")
-            for (i = 0; i < text.length; i++) {
-                text[i].style["color"] = "#00c23a"
-                text[i].style["text-shadow"] = "1px 1px #FFFFFF"
+            else {
+                document.body.style.background = "#d4d4d4"
+                text = document.getElementsByTagName("p")
+                link = document.getElementsByTagName("a")
+                for (i = 0; i < text.length; i++) {
+                    text[i].style["color"] = "black"
+                    text[i].style["text-shadow"] = "0px 0px"
+                }
+                for (i = 0; i < link.length; i++) {
+                    link[i].style["color"] = "black"
+                }
+                document.getElementById("mode").innerHTML = "Dark Mode"
+
             }
-            for (i = 0; i < link.length; i++) {
-                link[i].style["color"] = "white"
-            }
-            document.getElementById("mode").innerHTML = "Light Mode"
-            mode = 'dark'
-        }
-        function lightMode() {
-            document.body.style.background = "#d4d4d4"
-            text = document.getElementsByTagName("p")
-            link = document.getElementsByTagName("a")
-            for (i = 0; i < text.length; i++) {
-                text[i].style["color"] = "black"
-                text[i].style["text-shadow"] = "0px 0px"
-            }
-            for (i = 0; i < link.length; i++) {
-                link[i].style["color"] = "black"
-            }
-            document.getElementById("mode").innerHTML = "Dark Mode"
-            mode = 'light'
+            document.cookie = mode
         }
 
+        function changeMode() {
+            if (mode === 'dark')
+                mode = 'light'
+            else
+                mode = 'dark'
+            setMode()
+        }
         socket.on("seed", (seed) => {
             document.getElementById("seed").innerHTML = "Seed: " + seed
+            navigator.clipboard.writeText(seed)
         });
         socket.on("passCorrect", () => {
             window.location.href = "https://" + document.domain + "/verify"
         });
       </script>
-      <p class='seed' id='seed'><large></large><p>
-      <p>Press the 'Generate Seed' button to begin generation.</p>
-      <div></div>
-      <h2>Welcome to AAFSG Open Beta!</h2>
+      <p class='seed' id='seed'><p>
+      <p>Press the 'Generate Seed' button to display and copy a seed.</p>
+      <div style="height:15px"></div>
+      <h2>Welcome to AAFSG!</h2>
       <p>This project generates filtered seeds to run All Advancements Speedruns on.
-      It can be used for non-Pogloot runs, but because it does not check for loot,
-      it is recommended to use Pogloot alongside of it.</p>
+      It can be used for non-Pogloot runs or Pogloot runs, but you won't always get a perfect run without Pogloot.</p>
       <h2>Filters Used</h2>
       <p>This filters for: </p>
-      <p>A Desert Temple in pos pos and Village within 16 chunks of spawn</p>
+      <p>A Desert Temple with good loot in pos pos and Village within 16 chunks of spawn</p>
       <p>Rare Biomes (Snowy, Giant Tree, Mushroom, Badlands, Bamboo Jungle) within a box with corners -3k,-3k 3k,3k around spawn</p>
       <p>A bastion and fortress within 10 chunks of 0,0</p>
       <p>A very close end city from the first end gateway that contains a ship</p>

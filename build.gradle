@@ -32,8 +32,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.codehaus.groovy:groovy-all:3.0.8'
-    implementation 'com.github.KaptainWutax:SEED:master-SNAPSHOT'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.10'
+    implementation 'com.github.hube12:SEED:master-SNAPSHOT'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
