@@ -109,9 +109,6 @@ public class OverworldFilter {
                 }
             }
         }
-        if ((highTier && gunpowderCount >= 5) || (lowTier && gunpowderCount >= 10)) {
-            return true;
-        }
-        return false;
+        return (highTier && gunpowderCount >= 5) || (lowTier && gunpowderCount >= 10);
     }
 }
