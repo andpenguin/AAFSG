@@ -110,7 +110,6 @@ public class OverworldFilter {
             }
         }
         if ((highTier && gunpowderCount >= 5) || (lowTier && gunpowderCount >= 10)) {
-            System.out.println("High tier: " + highTier + " Low tier: " + lowTier);
             return true;
         }
         return false;
