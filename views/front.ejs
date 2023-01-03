@@ -126,6 +126,12 @@
         socket.on("passCorrect", () => {
             window.location.href = "https://" + document.domain + "/verify"
         });
+
+        window.addEventListener('keydown', (event) => {
+            if(event.keyCode == 221){
+                generate();
+            }
+        });
       </script>
       <p class='seed' id='seed'><p>
       <p>Press the 'Generate Seed' button to display and copy a seed.</p>
