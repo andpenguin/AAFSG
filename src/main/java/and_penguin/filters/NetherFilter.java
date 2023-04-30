@@ -2,24 +2,24 @@ package and_penguin.filters;
 
 import and_penguin.Main;
 import and_penguin.Storage;
-import kaptainwutax.biomeutils.biome.Biomes;
-import kaptainwutax.biomeutils.source.NetherBiomeSource;
-import kaptainwutax.featureutils.structure.BastionRemnant;
-import kaptainwutax.featureutils.structure.Fortress;
-import kaptainwutax.mcutils.rand.ChunkRand;
-import kaptainwutax.mcutils.util.math.DistanceMetric;
-import kaptainwutax.mcutils.util.pos.CPos;
+import com.seedfinding.mcbiome.biome.Biomes;
+import com.seedfinding.mcbiome.source.NetherBiomeSource;
+import com.seedfinding.mcfeature.structure.BastionRemnant;
+import com.seedfinding.mcfeature.structure.Fortress;
+import com.seedfinding.mccore.util.math.DistanceMetric;
+import com.seedfinding.mccore.util.pos.CPos;
+import com.seedfinding.mccore.rand.ChunkRand;
 
 public class NetherFilter {
     private final long seed;
     private final ChunkRand rand;
-    public static final double MAX_DIST = 10.0D * 10.0D;
+    public static final double MAX_DIST = 14.0D * 14.0D;
     public static Fortress fortress = new Fortress(Main.VERSION);
     public static BastionRemnant bastion = new BastionRemnant(Main.VERSION);
 
     /**
-     * Creates an NetherFilter object with a given structureseed and random value
-     * @param seed a structureseed to be filtered
+     * Creates an NetherFilter object with a given structure seed and random value
+     * @param seed a structure seed to be filtered
      * @param rand a ChunkRand to check with
      */
     public NetherFilter(long seed, ChunkRand rand) {
@@ -28,7 +28,7 @@ public class NetherFilter {
     }
 
     /**
-     * Filters the overworld of the structureseed, checking for a
+     * Filters the overworld of the structure seed, checking for a
      * Bastion within MAX_DIST of a fortress
      * and the Bastion is within MAX_DIST from 0,0
      * @return true if all structures are within the given range, otherwise,
@@ -50,7 +50,7 @@ public class NetherFilter {
             for (CPos bastionLoc : bastionLocs) {
                 if (bastionLoc == null) continue;
                 if (bastionLoc.distanceTo(fortLoc, DistanceMetric.EUCLIDEAN_SQ) // if bastion is close to fort and spawn
-                    <= MAX_DIST && bastionLoc.getMagnitudeSq() <= MAX_DIST) {
+                        <= MAX_DIST && bastionLoc.getMagnitudeSq() <= MAX_DIST) {
                     Storage.fortCoords = fortLoc; // save the coords
                     Storage.bastionCoords = bastionLoc;
                     break fastionLoop;
